@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derechos y Oportunidades: Guía de Discapacidad en Perú</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: La aplicación está diseñada como una guía de una sola página con un flujo lógico y vertical. Comienza con un "Panorama General" para contextualizar con datos clave. Sigue con "Tus Derechos Fundamentales" usando pestañas interactivas para no abrumar al usuario y permitirle explorar áreas específicas (salud, educación, etc.). Luego, la sección "El Camino hacia tus Beneficios" presenta un proceso claro y accionable en 3 pasos. Finalmente, "¿Necesitas Ayuda?" ofrece recursos y contactos directos. Esta estructura transforma el denso informe en una herramienta exploratoria y orientada a la acción, priorizando la facilidad de uso y la comprensión rápida sobre la estructura lineal del documento original. -->
+    <!-- Visualization & Content Choices: 
+        - Panorama: Goal=Informar. Method=Tarjetas de estadísticas y gráfico de dona (Chart.js/Canvas). Interaction=Hover. Justification=Resumen visual rápido de la demografía.
+        - Derechos: Goal=Comparar/Informar. Method=Pestañas interactivas (HTML/JS) y gráfico de barras (Chart.js/Canvas). Interaction=Click en pestañas, tooltips en gráfico. Justification=Organiza información compleja y resalta la brecha laboral de forma impactante.
+        - Beneficios: Goal=Organizar/Guiar. Method=Diagrama de flujo visual con tarjetas (HTML/Tailwind). Interaction=Hover. Justification=Simplifica un proceso burocrático en pasos claros y sencillos.
+        - Ayuda: Goal=Dirigir. Method=Tarjetas de contacto (HTML/Tailwind). Interaction=Hover en botones. Justification=Provee puntos de contacto claros y directos para el usuario.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #2D3748;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #2B6CB0;
+            border-bottom-color: #2B6CB0;
+        }
+        .stat-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .tab-button {
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            background-color: #3182CE;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Perú Inclusivo 🇵🇪</h1>
+                <nav class="mt-4 md:mt-0 space-x-6 text-lg">
+                    <a href="#panorama" class="nav-link pb-1">Panorama</a>
+                    <a href="#derechos" class="nav-link pb-1">Derechos</a>
+                    <a href="#beneficios" class="nav-link pb-1">Beneficios</a>
+                    <a href="#ayuda" class="nav-link pb-1">Ayuda</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        
+        <section id="panorama" class="text-center mb-24 scroll-mt-24">
+            <h2 class="text-4xl font-bold mb-4 text-gray-800">Un Panorama de la Discapacidad en Perú</h2>
+            <p class="text-xl max-w-3xl mx-auto text-gray-600 mb-12">En Perú, más de 3.2 millones de personas tienen alguna discapacidad, representando una parte vital de nuestra diversidad. Esta sección ofrece una mirada a los datos demográficos clave para entender mejor el contexto y la importancia de la inclusión.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h3 class="text-5xl font-bold text-blue-600">3.2M+</h3>
+                    <p class="text-gray-600 mt-2">Personas con discapacidad en el país.</p>
+                </div>
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h3 class="text-5xl font-bold text-blue-600">56.7%</h3>
+                    <p class="text-gray-600 mt-2">Son mujeres, evidenciando una mayor prevalencia.</p>
+                </div>
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h3 class="text-5xl font-bold text-blue-600">40.1%</h3>
+                    <p class="text-gray-600 mt-2">Son adultos mayores de 60 años.</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="text-left">
+                    <h3 class="text-3xl font-bold mb-4 text-gray-800">Tipos de Discapacidad</h3>
+                    <p class="text-lg text-gray-600 mb-4">La diversidad de discapacidades requiere un enfoque de inclusión variado y específico. La dificultad para ver es la más común, seguida de la motora. Este gráfico muestra la distribución de las principales dificultades permanentes reportadas.</p>
+                     <p class="text-sm text-gray-500">Pasa el cursor sobre el gráfico para ver los detalles de cada categoría.</p>
+                </div>
+                <div>
+                    <div class="chart-container">
+                        <canvas id="disabilityTypesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="derechos" class="mb-24 scroll-mt-24">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Tus Derechos Fundamentales</h2>
+            <p class="text-xl max-w-3xl mx-auto text-center text-gray-600 mb-12">La Ley N° 29973 establece un marco sólido para proteger tus derechos. Esta sección te permite explorar tus derechos clave en áreas esenciales de la vida. Haz clic en cada pestaña para descubrir cómo la ley te ampara.</p>
+            <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8">
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8" id="tabs-buttons">
+                    <button data-tab="salud" class="tab-button text-sm sm:text-base font-medium py-3 px-4 sm:px-6 rounded-full bg-gray-200 text-gray-700 active">❤️ Salud</button>
+                    <button data-tab="educacion" class="tab-button text-sm sm:text-base font-medium py-3 px-4 sm:px-6 rounded-full bg-gray-200 text-gray-700">🎓 Educación</button>
+                    <button data-tab="empleo" class="tab-button text-sm sm:text-base font-medium py-3 px-4 sm:px-6 rounded-full bg-gray-200 text-gray-700">💼 Empleo</button>
+                    <button data-tab="accesibilidad" class="tab-button text-sm sm:text-base font-medium py-3 px-4 sm:px-6 rounded-full bg-gray-200 text-gray-700">♿ Accesibilidad</button>
+                </div>
+                <div id="tabs-content">
+                    <div id="salud-content" class="tab-content active">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-800">Derecho a la Salud Integral</h3>
+                        <p class="text-lg text-gray-600 mb-4">Tienes derecho a gozar del más alto nivel de salud, sin discriminación. El Estado debe garantizar tu acceso a un seguro universal, gratuito o de bajo costo, y a servicios de habilitación y rehabilitación cerca de tu comunidad.</p>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg">
+                            <p><strong class="font-semibold">¿Sabías que?</strong> El 77.3% de la población con discapacidad ya cuenta con un seguro de salud. Además, tienes derecho a acceder a seguros de vida y salud privados sin ser discriminado por tu condición.</p>
+                        </div>
+                    </div>
+                    <div id="educacion-content" class="tab-content">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-800">Derecho a una Educación Inclusiva</h3>
+                        <p class="text-lg text-gray-600 mb-4">Tienes derecho a una educación de calidad en igualdad de oportunidades. Ninguna institución educativa, pública o privada, puede negarte el acceso o la permanencia por tu discapacidad. Deben proveer los materiales y la accesibilidad necesarios.</p>
+                         <div class="bg-green-50 border-l-4 border-green-500 text-green-800 p-4 rounded-r-lg">
+                            <p><strong class="font-semibold">Importante:</strong> Las universidades deben reservar el 5% de sus vacantes para personas con discapacidad que logren el puntaje mínimo aprobatorio.</p>
+                        </div>
+                    </div>
+                    <div id="empleo-content" class="tab-content">
+                         <h3 class="text-2xl font-bold mb-3 text-gray-800">Derecho al Trabajo y Empleo Digno</h3>
+                        <p class="text-lg text-gray-600 mb-4">Tienes derecho a trabajar en igualdad de condiciones, con "ajustes razonables" en tu lugar de trabajo. A pesar de la ley, persisten desafíos importantes. La inclusión laboral es un área clave para la autonomía y el desarrollo.</p>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Brecha de Participación Económica</h4>
+                                <p class="text-gray-600">Solo el 39.6% de las personas con discapacidad en edad de trabajar participa en la economía, una cifra significativamente menor que la población general. De ellos, casi la mitad son trabajadores independientes, lo que sugiere una falta de oportunidades de empleo formal.</p>
+                            </div>
+                            <div class="chart-container h-64 md:h-80">
+                                <canvas id="employmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="accesibilidad-content" class="tab-content">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-800">Derecho a la Accesibilidad Universal</h3>
+                        <p class="text-lg text-gray-600 mb-4">Es tu derecho acceder al entorno físico, al transporte, a la información y a las comunicaciones de forma autónoma y segura. Esto incluye desde rampas en edificios hasta intérpretes de lengua de señas y formatos de comunicación accesibles.</p>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-r-lg">
+                            <p><strong class="font-semibold">Un dato clave:</strong> La accesibilidad no es un favor, es una obligación legal para todas las entidades públicas y privadas que brindan servicios al público.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="beneficios" class="mb-24 scroll-mt-24">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">El Camino hacia tus Beneficios</h2>
+             <p class="text-xl max-w-3xl mx-auto text-center text-gray-600 mb-12">Para acceder a los beneficios y ejercer plenamente tus derechos, es fundamental estar oficialmente registrado. Este es un proceso de dos pasos que te abrirá las puertas a múltiples oportunidades. Aquí te guiamos en cada etapa.</p>
+            <div class="relative">
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-blue-300 transform -translate-y-1/2"></div>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-12 md:space-y-0 relative">
+                    <div class="flex-1 text-center">
+                        <div class="relative bg-blue-500 text-white w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold mx-auto mb-4 border-4 border-white shadow-lg">1</div>
+                        <h3 class="text-2xl font-semibold mb-2">Obtén tu Certificado</h3>
+                        <p class="text-gray-600 px-4">Acude a un centro de salud del MINSA, EsSalud o clínicas autorizadas. La evaluación es gratuita y el certificado acredita tu condición.</p>
+                    </div>
+                    <div class="flex-1 text-center">
+                        <div class="relative bg-blue-500 text-white w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold mx-auto mb-4 border-4 border-white shadow-lg">2</div>
+                        <h3 class="text-2xl font-semibold mb-2">Inscríbete en CONADIS</h3>
+                        <p class="text-gray-600 px-4">Con tu certificado, inscríbete en línea en la plataforma "Mi Registro" del CONADIS. Es un trámite gratuito y sencillo.</p>
+                    </div>
+                    <div class="flex-1 text-center">
+                        <div class="relative bg-green-500 text-white w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold mx-auto mb-4 border-4 border-white shadow-lg">✓</div>
+                        <h3 class="text-2xl font-semibold mb-2">¡Listo! Accede a tus Beneficios</h3>
+                        <p class="text-gray-600 px-4">Con tu Carné CONADIS, obtienes beneficios como pase libre en transporte, jubilación adelantada y tarifas preferenciales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ayuda" class="scroll-mt-24">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">¿Necesitas Ayuda o Quieres Denunciar?</h2>
+            <p class="text-xl max-w-3xl mx-auto text-center text-gray-600 mb-12">Si sientes que tus derechos han sido vulnerados o necesitas orientación, no estás solo. Estas son las instituciones clave en Perú que pueden protegerte, asesorarte y apoyarte en tu camino.</p>
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="stat-card bg-white p-8 rounded-xl shadow-lg border border-gray-200 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-3 text-gray-800">CONADIS</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">Es la entidad rectora. Te inscribe, te otorga el carné y supervisa las políticas públicas de discapacidad. Es tu primer punto de contacto para el registro y beneficios.</p>
+                    <button class="mt-auto bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">Sitio Web</button>
+                </div>
+                <div class="stat-card bg-white p-8 rounded-xl shadow-lg border border-gray-200 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-3 text-gray-800">Defensoría del Pueblo (MICDPD)</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">Es el mecanismo independiente que protege, promueve y supervisa tus derechos. Acude a ellos para denunciar cualquier vulneración o discriminación.</p>
+                    <button class="mt-auto bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">Presentar Queja</button>
+                </div>
+                <div class="stat-card bg-white p-8 rounded-xl shadow-lg border border-gray-200 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-3 text-gray-800">MIMP</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">El Ministerio de la Mujer y Poblaciones Vulnerables impulsa políticas de inclusión y cuenta con canales de denuncia para situaciones de riesgo o desprotección.</p>
+                    <button class="mt-auto bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">Más Información</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>Esta es una guía interactiva creada con base en el informe "Un Perú Inclusivo" y datos de fuentes oficiales como INEI y CONADIS.</p>
+            <p class="text-sm mt-2 opacity-70">El objetivo es la divulgación informativa. Para trámites y consultas legales, diríjase a las instituciones oficiales.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const disabilityTypesCtx = document.getElementById('disabilityTypesChart').getContext('2d');
+            new Chart(disabilityTypesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Dificultad para ver', 'Moverse o caminar', 'Oír', 'Otras'],
+                    datasets: [{
+                        label: 'Tipo de Discapacidad',
+                        data: [48.3, 15.1, 7.6, 29],
+                        backgroundColor: [
+                            '#4299E1', 
+                            '#4FD1C5',
+                            '#F6AD55',
+                            '#B794F4'
+                        ],
+                        borderColor: '#F8F7F4',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 14,
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const employmentCtx = document.getElementById('employmentChart').getContext('2d');
+            new Chart(employmentCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Personas con Discapacidad', 'Población General (Promedio)'],
+                    datasets: [{
+                        label: '% de Participación Económica',
+                        data: [39.6, 75], 
+                        backgroundColor: ['#F6AD55', '#4299E1'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                             max: 100,
+                             grid: {
+                                display: false
+                             }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Participación: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const tabsButtons = document.querySelectorAll('.tab-button');
+            const tabsContent = document.querySelectorAll('.tab-content');
+
+            tabsButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+
+                    tabsButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+
+                    tabsContent.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-content`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            const navLinks = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('main section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 120) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+        });
+    </script>
+
+</body>
+</html>
+
+
